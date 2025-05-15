@@ -3,7 +3,8 @@
 
 #include "raylib.h"
 #include "../constants.h"
-#include "rigidBody.h"
+#include "../engine/rigidBody.h"
+#include "../engine/hitbox.h"
 #include <stdio.h>
 
 #define MONKEY_SPEED 2

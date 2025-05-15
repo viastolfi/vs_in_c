@@ -2,7 +2,7 @@
 #define ENNEMY_H
 
 #include "raylib.h"
-#include "rigidBody.h"
+#include "../engine/rigidBody.h"
 
 typedef struct
 {

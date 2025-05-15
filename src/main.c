@@ -7,6 +7,17 @@
 #include "actors/ennemy.h"
 #include "constants.h"
 #include "engine/hitbox.h"
+#include "items/projectile.h"
+
+#define DA_LIB_IMPLEMENTATION
+#include "./data_structures/da.h"
+
+typedef struct
+{
+    projectile_item* items;
+    size_t count;
+    size_t capacity;
+} projectiles;
 
 int main(void)
 {
@@ -14,9 +25,11 @@ int main(void)
 
     monkey_actor m = {0};
     ennemy_actor e = {0};
+
     int fps = 0;
     char* text = malloc(30);
     int frameCounter = 0, framePerSecond = 8;
+    projectiles projs = {0};
 
     // load monkey actor
     {
@@ -44,11 +57,20 @@ int main(void)
             sprintf(text, "%s%d", "FPS : ", fps);
             
             update_monkey(&m);
+            da_foreach(projectile_item, it, &projs)
+            {
+                update_projectile(it);
+            }
+
             frameCounter++;
             if(frameCounter >= (60/framePerSecond))
             {
                 frameCounter = 0;
                 update_monkey_animation(&m);
+                projectile_item* p = (projectile_item*) malloc(sizeof(projectile_item));
+                init_projectile(p, m.rb.pos);
+                da_append(&projs, *p); 
+                TraceLog(LOG_INFO, "DATA COUNT : %d", projs.count);
             }
 
             update_hitbox(&(m.rb.hitbox), hitboxes, 2);
@@ -66,6 +88,11 @@ int main(void)
             DrawTextureRec(m.rb.texture, m.rb.frameRec, m.rb.pos, WHITE);
             DrawRectangleLinesEx(m.rb.hitbox.rect, 1, LIME);
 
+            da_foreach(projectile_item, it, &projs)
+            {
+                DrawTextureRec(it->rb.texture, it->rb.frameRec, it->rb.pos, WHITE);
+                DrawRectangleLinesEx(it->rb.hitbox.rect, 1, LIME);
+            }
 
             EndDrawing();
         }
