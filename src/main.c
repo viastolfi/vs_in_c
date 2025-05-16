@@ -57,9 +57,11 @@ int main(void)
             sprintf(text, "%s%d", "FPS : ", fps);
             
             update_monkey(&m);
-            da_foreach(projectile_item, it, &projs)
+            for(int i = 0; i < projs.count; ++i)
             {
-                update_projectile(it);
+                update_projectile(&(projs.items[i]));
+                if (projs.items[i].rb.pos.x > WIDTH)
+                    da_remove(&projs, i);
             }
 
             frameCounter++;
@@ -70,7 +72,6 @@ int main(void)
                 projectile_item* p = (projectile_item*) malloc(sizeof(projectile_item));
                 init_projectile(p, m.rb.pos);
                 da_append(&projs, *p); 
-                TraceLog(LOG_INFO, "DATA COUNT : %d", projs.count);
             }
 
             update_hitbox(&(m.rb.hitbox), hitboxes, 2);
