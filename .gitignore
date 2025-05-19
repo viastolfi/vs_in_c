@@ -3,4 +3,4 @@ nob
 nob.old
 raylib-5.5_macos/
 *.swp
-
+*.DS_Store

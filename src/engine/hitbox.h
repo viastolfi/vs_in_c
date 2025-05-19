@@ -45,5 +45,23 @@ inline static void update_hitbox(hitbox_engine* self, hitbox_engine* others[], i
     }
 }
 
+#define update_hitbox_with_da(self, da)                                             \
+    do {                                                                            \
+        for(size_t i = 0; i < (da)->count; ++i) {                                   \
+            hitbox_engine* other = &((da)->items[i].rb.hitbox);                     \
+            if (self == other) continue;                                            \
+            bool is_colliding = CheckCollisionRecs((self)->rect, (other)->rect);    \
+            if (is_colliding && !(self)->was_colliding_last_frame) {                \
+                if ((self)->on_enter) (self)->on_enter(self, other);                \
+            }                                                                       \
+            else if (is_colliding && (self)->was_colliding_last_frame) {            \
+                if ((self)->on_stay) (self)->on_stay(self, other);                  \
+            }                                                                       \
+            else if (!is_colliding && (self)->was_colliding_last_frame) {           \
+                if ((self)->on_exit) (self)->on_exit(self, other);                  \
+            }                                                                       \
+            (self)->was_colliding_last_frame = is_colliding;                        \
+        }                                                                           \
+    } while(0)
 
 #endif // HITBOX_H

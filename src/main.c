@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "raylib.h" 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -46,6 +46,8 @@ int main(void)
         load_texture_ennemy(&e);
     }
 
+    Texture2D proj_texture = load_texture_projectile();
+
     hitbox_engine* hitboxes[] = {&(m.rb.hitbox), &(e.rb.hitbox)};
     SetTargetFPS(60);
    
@@ -57,11 +59,14 @@ int main(void)
             sprintf(text, "%s%d", "FPS : ", fps);
             
             update_monkey(&m);
-            for(int i = 0; i < projs.count; ++i)
+            for(size_t i = 0; i < projs.count; ++i)
             {
                 update_projectile(&(projs.items[i]));
                 if (projs.items[i].rb.pos.x > WIDTH)
+                {
                     da_remove(&projs, i);
+                }
+                
             }
 
             frameCounter++;
@@ -70,11 +75,12 @@ int main(void)
                 frameCounter = 0;
                 update_monkey_animation(&m);
                 projectile_item* p = (projectile_item*) malloc(sizeof(projectile_item));
-                init_projectile(p, m.rb.pos);
+                init_projectile(p, m.rb.pos, proj_texture);
                 da_append(&projs, *p); 
             }
 
             update_hitbox(&(m.rb.hitbox), hitboxes, 2);
+            update_hitbox_with_da(&(e.hurtbox), &projs);
         }
     
         // DRAW
