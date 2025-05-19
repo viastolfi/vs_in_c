@@ -8,6 +8,7 @@
 #include "constants.h"
 #include "engine/hitbox.h"
 #include "items/projectile.h"
+#include "items/food.h"
 
 #define DA_LIB_IMPLEMENTATION
 #include "./data_structures/da.h"
@@ -25,6 +26,7 @@ int main(void)
 
     monkey_actor m = {0};
     ennemy_actor e = {0};
+    food_item f = {0};
 
     int fps = 0;
     char* text = malloc(30);
@@ -46,6 +48,9 @@ int main(void)
         load_texture_ennemy(&e);
     }
 
+    Vector2 food_pos = (Vector2) {500.0f, 500.0f};
+    init_food_item(&f, (Vector2) food_pos);
+
     Texture2D proj_texture = load_texture_projectile();
 
     hitbox_engine* hitboxes[] = {&(m.rb.hitbox), &(e.rb.hitbox)};
@@ -59,6 +64,7 @@ int main(void)
             sprintf(text, "%s%d", "FPS : ", fps);
             
             update_monkey(&m);
+            update_food_item(&f, &m);
             for(size_t i = 0; i < projs.count; ++i)
             {
                 update_projectile(&(projs.items[i]));
@@ -94,6 +100,8 @@ int main(void)
 
             DrawTextureRec(m.rb.texture, m.rb.frameRec, m.rb.pos, WHITE);
             DrawRectangleLinesEx(m.rb.hitbox.rect, 1, LIME);
+
+            DrawTextureRec(f.rb.texture, f.rb.frameRec, f.rb.pos, WHITE);
 
             da_foreach(projectile_item, it, &projs)
             {
