@@ -2,6 +2,7 @@
 #define HITBOX_H
 
 #include "raylib.h"
+//#include "../types.h"
 
 typedef struct hitbox_engine hitbox_engine;
 
@@ -44,11 +45,11 @@ inline static void update_hitbox(hitbox_engine* self, hitbox_engine* others[], i
         self->was_colliding_last_frame = is_colliding;
     }
 }
-
-#define update_hitbox_with_da(self, da)                                             \
+/*
+#define update_hitbox_with_da(self, da, hitters)                                    \
     do {                                                                            \
         for(size_t i = 0; i < (da)->count; ++i) {                                   \
-            hitbox_engine* other = &((da)->items[i].rb.hitbox);                     \
+            hitbox_engine* other = &((da)->items[i]->rb.hitbox);                     \
             if (self == other) continue;                                            \
             bool is_colliding = CheckCollisionRecs((self)->rect, (other)->rect);    \
             if (is_colliding && !(self)->was_colliding_last_frame) {                \
@@ -63,5 +64,6 @@ inline static void update_hitbox(hitbox_engine* self, hitbox_engine* others[], i
             (self)->was_colliding_last_frame = is_colliding;                        \
         }                                                                           \
     } while(0)
+*/
 
 #endif // HITBOX_H
